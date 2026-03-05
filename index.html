@@ -641,7 +641,17 @@ async function doLogin() {
   const sMap = {};
   (settings||[]).forEach(r => sMap[r.key] = r.value);
   
-  if((id === sMap.admin_id && pw === sMap.admin_pw) || (id === sMap.admin_id2 && pw === sMap.admin_pw2)) {
+  // 관리자 계정 확인
+  const isAdmin = (id === sMap.admin_id && pw === sMap.admin_pw) || (id === sMap.admin_id2 && pw === sMap.admin_pw2);
+  
+  // 직원 계정 확인
+  let isUser = false;
+  try {
+    const accounts = JSON.parse(sMap.user_accounts || '{}');
+    if(accounts[id] && accounts[id] === pw) isUser = true;
+  } catch(e) {}
+  
+  if(isAdmin || isUser) {
     errEl.textContent = '';
     loggedInUser = id;
     document.getElementById('loginScreen').style.display = 'none';
