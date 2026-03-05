@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dihst/xlsx.full.min.js"></script>
 <style>
 :root {
   --bg: #0f1117;
@@ -612,6 +612,7 @@ let DATA = { employees:[], plans:{}, areas:{}, daily:[], settings:{}, months:[] 
 let currentTab = 'dashboard';
 let currentMonth = '';
 let loggedInUser = '';
+    let currentUser = null;
 
 // ==========================================
 //  유틸리티
@@ -630,37 +631,47 @@ const dayEmoji = d => ({
 //  로그인
 // ==========================================
 async function doLogin() {
-  const id = document.getElementById('loginId').value.trim();
-  const pw = document.getElementById('loginPw').value.trim();
-  const errEl = document.getElementById('loginError');
-  
-  if(!id || !pw) { errEl.textContent = '아이디와 비밀번호를 입력하세요'; return; }
-  
-  // settings 테이블에서 admin 정보 확인
-  const { data: settings } = await sb.from('settings').select('*');
-  const sMap = {};
-  (settings||[]).forEach(r => sMap[r.key] = r.value);
-  
-  // 관리자 계정 확인
-  const isAdmin = (id === sMap.admin_id && pw === sMap.admin_pw) || (id === sMap.admin_id2 && pw === sMap.admin_pw2);
-  
-  // 직원 계정 확인
-  let isUser = false;
-  try {
-    const accounts = JSON.parse(sMap.user_accounts || '{}');
-    if(accounts[id] && accounts[id] === pw) isUser = true;
-  } catch(e) {}
-  
-  if(isAdmin || isUser) {
-    errEl.textContent = '';
-    loggedInUser = id;
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    await loadAllData();
-  } else {
-    errEl.textContent = '아이디 또는 비밀번호가 일치하지 않습니다';
-  }
-}
+      const idInput = document.getElementById('loginId');
+      const pwInput = document.getElementById('loginPw');
+      const errorEl = document.getElementById('loginError');
+      const id = idInput.value.trim();
+      const pw = pwInput.value.trim();
+      if (!id || !pw) {
+        errorEl.textContent = '아이디와 비밀번호를 입력하세요';
+        errorEl.style.display = 'block';
+        return;
+      }
+      errorEl.style.display = 'none';
+      try {
+        const { data: settings } = await sb.from('settings').select('*');
+        if (settings && settings.length > 0) {
+          const adminIdRow = settings.find(r => r.key === 'admin_id');
+          const adminPwRow = settings.find(r => r.key === 'admin_pw');
+          if (adminIdRow && adminPwRow && id === adminIdRow.value && pw === adminPwRow.value) {
+            loggedIn = true;
+            currentUser = { role: 'admin', name: '관리자', login_id: id };
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+            loadAllData();
+            return;
+          }
+        }
+        const { data: empData } = await sb.from('employees').select('*').eq('login_id', id).eq('password', pw);
+        if (empData && empData.length > 0) {
+          loggedIn = true;
+          currentUser = { role: 'employee', name: empData[0].name, login_id: id };
+          document.getElementById('loginScreen').style.display = 'none';
+          document.getElementById('app').style.display = 'block';
+          loadAllData();
+          return;
+        }
+        errorEl.textContent = '아이디 또는 비밀번호가 일치하지 않습니다';
+        errorEl.style.display = 'block';
+      } catch (err) {
+        errorEl.textContent = '로그인 중 오류가 발생했습니다';
+        errorEl.style.display = 'block';
+      }
+    }
 
 // Enter 키로 로그인
 document.addEventListener('keydown', e => {
