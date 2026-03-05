@@ -723,7 +723,8 @@ function buildNav() {
     { id:'clients',   label:'🏢 거래처' },
     { id:'workers',   label:'👷 담당자별' },
     { id:'weekday',   label:'📅 요일별' },
-    { id:'tasks',     label:'📋 요청사항' }
+    { id:'tasks',     label:'📋 요청사항' },
+    { id:'compinfo',  label:'🏠 업체정보' }
   ];
   document.getElementById('navTabs').innerHTML = tabs.map(t =>
     `<button class="nav-tab ${currentTab===t.id?'active':''}" onclick="navigateTo('${t.id}')">${t.label}</button>`
@@ -740,6 +741,7 @@ function navigateTo(tab) {
     case 'workers': renderWorkers(el); break;
     case 'weekday': renderWeekday(el); break;
     case 'tasks': renderTasks(el); break;
+    case 'compinfo': renderCompInfo(el); break;
   }
 }
 
@@ -1069,6 +1071,131 @@ async function submitTask() {
   
   document.getElementById('modal').classList.remove('show');
   renderTasks(document.getElementById('mainContent'));
+}
+
+// ==========================================
+//  업체정보 (출입방법, 분리수거장, 특이사항)
+// ==========================================
+async function renderCompInfo(el) {
+  el.innerHTML = '<div class="loading"><div class="spinner"></div>업체정보 불러오는 중...</div>';
+  
+  const { data: infos, error } = await sb.from('company_info')
+    .select('*')
+    .order('company', {ascending: true});
+  
+  if(error) { el.innerHTML = '<div class="empty">오류: '+error.message+'</div>'; return; }
+  
+  // 업체별로 그룹핑 (최신 것만 표시)
+  const byCompany = {};
+  (infos||[]).forEach(r => {
+    if(!byCompany[r.company]) byCompany[r.company] = r;
+  });
+  const infoList = Object.values(byCompany);
+  
+  // 거래처 목록 (검색/자동완성용)
+  const companies = new Set();
+  Object.values(DATA.areas).forEach(arr => arr.forEach(r => { if(r.company) companies.add(r.company); }));
+  Object.values(DATA.plans).forEach(arr => arr.forEach(r => { if(r.company) companies.add(r.company); }));
+  
+  el.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div class="section-title" style="margin-bottom:0">🏠 업체 정보</div>
+      <button onclick="showAddCompInfoModal()" style="padding:10px 18px;background:var(--accent);color:#0f1117;border:none;border-radius:10px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer">+ 정보 등록</button>
+    </div>
+    <input class="search-box" type="text" placeholder="업체명 검색..." oninput="filterCompInfo(this.value)">
+    ${infoList.length === 0 ? '<div class="empty">등록된 업체정보가 없습니다</div>' : ''}
+    <div id="compInfoList">
+    ${infoList.map(r => `
+      <div class="data-card comp-info-card" data-name="${r.company}" style="border-left:3px solid var(--blue)">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:15px;font-weight:700">${r.company}</div>
+            <div style="font-size:11px;color:var(--text2);margin-top:3px">작성: ${r.written_by||'-'} · ${new Date(r.created_at).toLocaleDateString('ko-KR')}</div>
+          </div>
+        </div>
+        ${r.entry_method ? `
+        <div style="padding:12px 20px;border-bottom:1px solid rgba(42,47,62,0.4)">
+          <div style="font-size:11px;color:var(--blue);font-weight:600;margin-bottom:4px">🚪 출입 방법</div>
+          <div style="font-size:14px;white-space:pre-wrap">${r.entry_method}</div>
+        </div>` : ''}
+        ${r.recycling_location ? `
+        <div style="padding:12px 20px;border-bottom:1px solid rgba(42,47,62,0.4)">
+          <div style="font-size:11px;color:var(--accent);font-weight:600;margin-bottom:4px">♻️ 분리수거장 위치</div>
+          <div style="font-size:14px;white-space:pre-wrap">${r.recycling_location}</div>
+        </div>` : ''}
+        ${r.special_note ? `
+        <div style="padding:12px 20px">
+          <div style="font-size:11px;color:var(--yellow);font-weight:600;margin-bottom:4px">⚠️ 특이사항</div>
+          <div style="font-size:14px;white-space:pre-wrap">${r.special_note}</div>
+        </div>` : ''}
+      </div>
+    `).join('')}
+    </div>
+  `;
+}
+
+function filterCompInfo(q) {
+  q = q.toLowerCase();
+  document.querySelectorAll('.comp-info-card').forEach(c => {
+    const name = (c.getAttribute('data-name')||'').toLowerCase();
+    const text = c.textContent.toLowerCase();
+    c.style.display = (name.includes(q) || text.includes(q) || !q) ? '' : 'none';
+  });
+}
+
+function showAddCompInfoModal() {
+  const companies = new Set();
+  Object.values(DATA.areas).forEach(arr => arr.forEach(r => { if(r.company) companies.add(r.company); }));
+  Object.values(DATA.plans).forEach(arr => arr.forEach(r => { if(r.company) companies.add(r.company); }));
+  const companyList = Array.from(companies).sort();
+  
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-title">🏠 업체 정보 등록</div>
+    <div class="modal-sub">업체의 출입방법, 분리수거장 위치, 특이사항을 기록하세요</div>
+    <div style="margin-bottom:14px">
+      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">업체명</label>
+      <input type="text" id="ciCompany" list="ciCompanyList" placeholder="업체명 입력 또는 선택" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none">
+      <datalist id="ciCompanyList">${companyList.map(c => `<option value="${c}">`).join('')}</datalist>
+    </div>
+    <div style="margin-bottom:14px">
+      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">🚪 출입 방법</label>
+      <textarea id="ciEntry" rows="3" placeholder="예: 정문 비밀번호 1234#, 주차장 옆문 카드키 필요" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none;resize:vertical"></textarea>
+    </div>
+    <div style="margin-bottom:14px">
+      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">♻️ 분리수거장 위치</label>
+      <textarea id="ciRecycling" rows="2" placeholder="예: 지하1층 주차장 끝, 건물 뒤편 외부" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none;resize:vertical"></textarea>
+    </div>
+    <div style="margin-bottom:16px">
+      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">⚠️ 특이사항</label>
+      <textarea id="ciNote" rows="3" placeholder="예: 월요일 오전 회의 중 청소 금지, 사장님 자리 주의" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none;resize:vertical"></textarea>
+    </div>
+    <button onclick="submitCompInfo()" style="width:100%;padding:14px;background:var(--accent);color:#0f1117;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:8px">등록</button>
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('show')">취소</button>
+  `;
+  document.getElementById('modal').classList.add('show');
+}
+
+async function submitCompInfo() {
+  const company = document.getElementById('ciCompany').value.trim();
+  const entry = document.getElementById('ciEntry').value.trim();
+  const recycling = document.getElementById('ciRecycling').value.trim();
+  const note = document.getElementById('ciNote').value.trim();
+  
+  if(!company) { alert('업체명을 입력하세요'); return; }
+  if(!entry && !recycling && !note) { alert('최소 1개 항목을 입력하세요'); return; }
+  
+  const { error } = await sb.from('company_info').insert({
+    company: company,
+    entry_method: entry || null,
+    recycling_location: recycling || null,
+    special_note: note || null,
+    written_by: loggedInUser
+  });
+  
+  if(error) { alert('등록 실패: ' + error.message); return; }
+  
+  document.getElementById('modal').classList.remove('show');
+  renderCompInfo(document.getElementById('mainContent'));
 }
 
 // ==========================================
