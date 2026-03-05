@@ -611,6 +611,7 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let DATA = { employees:[], plans:{}, areas:{}, daily:[], settings:{}, months:[] };
 let currentTab = 'dashboard';
 let currentMonth = '';
+let loggedInUser = '';
 
 // ==========================================
 //  유틸리티
@@ -640,8 +641,9 @@ async function doLogin() {
   const sMap = {};
   (settings||[]).forEach(r => sMap[r.key] = r.value);
   
-  if(id === sMap.admin_id && pw === sMap.admin_pw) {
+  if((id === sMap.admin_id && pw === sMap.admin_pw) || (id === sMap.admin_id2 && pw === sMap.admin_pw2)) {
     errEl.textContent = '';
+    loggedInUser = id;
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     await loadAllData();
@@ -720,7 +722,8 @@ function buildNav() {
     { id:'dashboard', label:'📊 대시보드' },
     { id:'clients',   label:'🏢 거래처' },
     { id:'workers',   label:'👷 담당자별' },
-    { id:'weekday',   label:'📅 요일별' }
+    { id:'weekday',   label:'📅 요일별' },
+    { id:'tasks',     label:'📋 요청사항' }
   ];
   document.getElementById('navTabs').innerHTML = tabs.map(t =>
     `<button class="nav-tab ${currentTab===t.id?'active':''}" onclick="navigateTo('${t.id}')">${t.label}</button>`
@@ -736,6 +739,7 @@ function navigateTo(tab) {
     case 'clients': renderClients(el); break;
     case 'workers': renderWorkers(el); break;
     case 'weekday': renderWeekday(el); break;
+    case 'tasks': renderTasks(el); break;
   }
 }
 
@@ -927,6 +931,144 @@ function monthSelector() {
 function selectMonth(m) {
   currentMonth = m;
   navigateTo(currentTab);
+}
+
+// ==========================================
+//  요청사항
+// ==========================================
+async function renderTasks(el) {
+  el.innerHTML = '<div class="loading"><div class="spinner"></div>요청사항 불러오는 중...</div>';
+  
+  // 1주일 이내 데이터만 가져오기
+  const weekAgo = new Date(Date.now() - 7*24*60*60*1000).toISOString();
+  const { data: tasks, error } = await sb.from('company_tasks')
+    .select('*')
+    .gte('created_at', weekAgo)
+    .order('created_at', {ascending: false});
+  
+  if(error) { el.innerHTML = '<div class="empty">오류: '+error.message+'</div>'; return; }
+  
+  // 1주일 지난 데이터 자동 삭제
+  sb.from('company_tasks').delete().lt('created_at', weekAgo).then(()=>{});
+  
+  const taskList = (tasks||[]);
+  
+  el.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div class="section-title" style="margin-bottom:0">📋 업체 요청사항</div>
+      <button onclick="showAddTaskModal()" style="padding:10px 18px;background:var(--accent);color:#0f1117;border:none;border-radius:10px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer">+ 새 요청</button>
+    </div>
+    ${taskList.length === 0 ? '<div class="empty">등록된 요청사항이 없습니다</div>' : ''}
+    ${taskList.map(t => {
+      const items = [];
+      if(t.task1) items.push({text:t.task1, checked:t.check1, checker:t.checker1, idx:1});
+      if(t.task2) items.push({text:t.task2, checked:t.check2, checker:t.checker2, idx:2});
+      if(t.task3) items.push({text:t.task3, checked:t.check3, checker:t.checker3, idx:3});
+      if(t.task4) items.push({text:t.task4, checked:t.check4, checker:t.checker4, idx:4});
+      const allChecked = items.length > 0 && items.every(i => i.checked);
+      const checkedCount = items.filter(i => i.checked).length;
+      const daysLeft = Math.ceil((new Date(t.created_at).getTime() + 7*24*60*60*1000 - Date.now()) / (24*60*60*1000));
+      
+      return `
+        <div class="data-card" style="border-left:3px solid ${allChecked?'var(--accent)':'var(--yellow)'}">
+          <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-size:15px;font-weight:700">${t.company}</div>
+              <div style="font-size:11px;color:var(--text2);margin-top:4px">작성: ${t.created_by||'-'} · ${new Date(t.created_at).toLocaleDateString('ko-KR')} · <span style="color:${daysLeft<=2?'var(--red)':'var(--text2)'}">D-${daysLeft}</span></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px;color:${allChecked?'var(--accent)':'var(--yellow)'};font-weight:600">${checkedCount}/${items.length}</span>
+              <button onclick="deleteTask(${t.id})" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:16px;padding:4px" title="삭제">✕</button>
+            </div>
+          </div>
+          ${items.map(item => `
+            <div style="padding:12px 20px;border-bottom:1px solid rgba(42,47,62,0.4);display:flex;align-items:center;gap:12px">
+              <div onclick="toggleCheck(${t.id},${item.idx},${!item.checked})" style="width:24px;height:24px;border-radius:6px;border:2px solid ${item.checked?'var(--accent)':'var(--border)'};background:${item.checked?'var(--accent)':'transparent'};cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s">
+                ${item.checked ? '<span style="color:#0f1117;font-size:14px;font-weight:700">✓</span>' : ''}
+              </div>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:14px;${item.checked?'text-decoration:line-through;color:var(--text2)':''}">${item.text}</div>
+                ${item.checked && item.checker ? `<div style="font-size:11px;color:var(--accent);margin-top:2px">✓ ${item.checker} 확인</div>` : ''}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }).join('')}
+  `;
+}
+
+async function toggleCheck(taskId, idx, checked) {
+  const update = {};
+  update['check'+idx] = checked;
+  update['checker'+idx] = checked ? loggedInUser : null;
+  await sb.from('company_tasks').update(update).eq('id', taskId);
+  renderTasks(document.getElementById('mainContent'));
+}
+
+async function deleteTask(taskId) {
+  if(!confirm('이 요청사항을 삭제하시겠습니까?')) return;
+  await sb.from('company_tasks').delete().eq('id', taskId);
+  renderTasks(document.getElementById('mainContent'));
+}
+
+function showAddTaskModal() {
+  // 거래처 목록 가져오기
+  const companies = new Set();
+  Object.values(DATA.areas).forEach(arr => arr.forEach(r => { if(r.company) companies.add(r.company); }));
+  Object.values(DATA.plans).forEach(arr => arr.forEach(r => { if(r.company) companies.add(r.company); }));
+  const companyList = Array.from(companies).sort();
+  
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-title">📋 새 요청사항 등록</div>
+    <div class="modal-sub">업체를 선택하고 요청사항을 입력하세요 (최대 4개)</div>
+    <div style="margin-bottom:14px">
+      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">업체명</label>
+      <input type="text" id="taskCompany" list="companyDatalist" placeholder="업체명 입력 또는 선택" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none">
+      <datalist id="companyDatalist">${companyList.map(c => `<option value="${c}">`).join('')}</datalist>
+    </div>
+    <div style="margin-bottom:10px">
+      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">요청사항 1</label>
+      <input type="text" id="taskItem1" placeholder="요청사항 입력" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none">
+    </div>
+    <div style="margin-bottom:10px">
+      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">요청사항 2 <span style="color:var(--text2);font-size:11px">(선택)</span></label>
+      <input type="text" id="taskItem2" placeholder="요청사항 입력" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none">
+    </div>
+    <div style="margin-bottom:10px">
+      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">요청사항 3 <span style="color:var(--text2);font-size:11px">(선택)</span></label>
+      <input type="text" id="taskItem3" placeholder="요청사항 입력" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none">
+    </div>
+    <div style="margin-bottom:16px">
+      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">요청사항 4 <span style="color:var(--text2);font-size:11px">(선택)</span></label>
+      <input type="text" id="taskItem4" placeholder="요청사항 입력" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none">
+    </div>
+    <button onclick="submitTask()" style="width:100%;padding:14px;background:var(--accent);color:#0f1117;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:8px">등록</button>
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('show')">취소</button>
+  `;
+  document.getElementById('modal').classList.add('show');
+}
+
+async function submitTask() {
+  const company = document.getElementById('taskCompany').value.trim();
+  const t1 = document.getElementById('taskItem1').value.trim();
+  if(!company) { alert('업체명을 입력하세요'); return; }
+  if(!t1) { alert('요청사항을 1개 이상 입력하세요'); return; }
+  
+  const row = {
+    company: company,
+    task1: t1 || null,
+    task2: document.getElementById('taskItem2').value.trim() || null,
+    task3: document.getElementById('taskItem3').value.trim() || null,
+    task4: document.getElementById('taskItem4').value.trim() || null,
+    created_by: loggedInUser
+  };
+  
+  const { error } = await sb.from('company_tasks').insert(row);
+  if(error) { alert('등록 실패: ' + error.message); return; }
+  
+  document.getElementById('modal').classList.remove('show');
+  renderTasks(document.getElementById('mainContent'));
 }
 
 // ==========================================
