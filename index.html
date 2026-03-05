@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 <style>
 :root {
   --bg: #0f1117;
@@ -584,6 +585,18 @@ body {
   <div class="modal-content" id="modalBody"></div>
 </div>
 
+<!-- 업로드 모달 -->
+<div class="modal-overlay" id="uploadModal" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="modal-content">
+    <div class="modal-title">📁 엑셀 파일 업로드</div>
+    <div class="modal-sub">엑셀 파일을 선택하면 기존 데이터를 교체합니다</div>
+    <input type="file" id="excelFile" accept=".xlsx,.xls" style="display:none" onchange="handleExcelFile(this)">
+    <button onclick="document.getElementById('excelFile').click()" style="width:100%;padding:16px;background:var(--accent);color:#0f1117;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:12px">파일 선택</button>
+    <div id="uploadStatus" style="font-size:13px;color:var(--text2);text-align:center;min-height:40px;line-height:1.6"></div>
+    <button class="modal-close" onclick="document.getElementById('uploadModal').classList.remove('show')">닫기</button>
+  </div>
+</div>
+
 <script>
 // ==========================================
 //  Supabase 설정
@@ -739,6 +752,7 @@ function renderDashboard(el) {
   
   el.innerHTML = `
     ${monthSelector()}
+    <button onclick="document.getElementById('uploadModal').classList.add('show')" style="width:100%;padding:14px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;margin-bottom:16px;transition:all .2s">📁 엑셀 파일 업데이트</button>
     <div class="stat-grid">
       <div class="stat-card green">
         <div class="stat-label">총 수당</div>
@@ -958,6 +972,193 @@ function closeModal(e) {
   if(e.target === document.getElementById('modal')) {
     document.getElementById('modal').classList.remove('show');
   }
+}
+
+// ==========================================
+//  엑셀 업로드 처리
+// ==========================================
+async function handleExcelFile(input) {
+  const file = input.files[0];
+  if(!file) return;
+  const status = document.getElementById('uploadStatus');
+  status.innerHTML = '<div class="spinner" style="display:inline-block;width:16px;height:16px;vertical-align:middle;margin-right:8px"></div>파일 읽는 중...';
+
+  try {
+    const data = await file.arrayBuffer();
+    const wb = XLSX.read(data, {type:'array'});
+    status.textContent = '✅ 파일 읽기 완료. 데이터 변환 중...';
+
+    // 1) 직원 파싱 (인적정보 시트)
+    const employees = [];
+    if(wb.SheetNames.includes('인적정보')) {
+      const ws = wb.Sheets['인적정보'];
+      const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
+      for(let i=3; i<rows.length; i++) {
+        const r = rows[i];
+        const name = String(r[1]||'').trim();
+        if(!name) continue;
+        employees.push({
+          no: String(r[0]||'').trim(),
+          name: name,
+          resident_no: String(r[2]||'').trim(),
+          bank: String(r[3]||'').trim(),
+          account: String(r[4]||'').trim(),
+          login_id: String(r[5]||'').trim() || name,
+          unavailable_day: String(r[6]||'').trim(),
+          unavailable_time: String(r[7]||'').trim()
+        });
+      }
+    }
+    status.textContent = `✅ 직원 ${employees.length}명 파싱 완료`;
+
+    // 2) 월별 계획 파싱
+    const plans = [];
+    const planSheets = [
+      {sheet:'2월담당자예상계획', month:'2월'},
+      {sheet:'3월담당자예상계획', month:'3월'},
+      {sheet:'4월담당자예상계획', month:'4월'},
+      {sheet:'5월담당자예상계획', month:'5월'},
+    ];
+    for(const ps of planSheets) {
+      if(!wb.SheetNames.includes(ps.sheet)) continue;
+      const ws = wb.Sheets[ps.sheet];
+      const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
+      let lc='', ll='';
+      for(let i=3; i<rows.length; i++) {
+        const r = rows[i];
+        if(!r || r.length < 15) continue;
+        const worker = String(r[10]||'').trim();
+        const amt = safeNum(r[9]);
+        if(!worker || !amt || worker==='담당자') continue;
+        const company = String(r[3]||'').trim();
+        if(company) { lc=company; ll=String(r[4]||'').trim(); }
+        plans.push({
+          month: ps.month,
+          area_code: String(r[0]||'').trim(),
+          company: company||lc,
+          location: String(r[4]||'').trim()||ll,
+          contract_amount: safeNum(r[5]),
+          worker_pay: safeNum(r[8]),
+          real_amount: amt,
+          worker: worker,
+          clean_day: String(r[12]||'').trim(),
+          count: safeNum(r[13]),
+          note: String(r[14]||'').trim()
+        });
+      }
+    }
+
+    // 3) 월별 구역 파싱
+    const areas = [];
+    const areaSheets = [
+      {sheet:'2월 구역별정리', month:'2월'},
+      {sheet:'3월 구역별정리', month:'3월'},
+      {sheet:'4월 구역별정리', month:'4월'},
+      {sheet:'5월 구역별정리', month:'5월'},
+    ];
+    for(const as2 of areaSheets) {
+      if(!wb.SheetNames.includes(as2.sheet)) continue;
+      const ws = wb.Sheets[as2.sheet];
+      const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
+      let curArea = '';
+      for(let i=1; i<rows.length; i++) {
+        const r = rows[i];
+        if(!r) continue;
+        const b = String(r[1]||'').trim();
+        if(!b || b==='NO') continue;
+        const company = String(r[2]||'').trim();
+        if(!company && safeNum(r[8]) > 50000) { curArea = b; continue; }
+        if(!company) continue;
+        areas.push({
+          month: as2.month,
+          area_name: curArea,
+          area_code: b,
+          company: company,
+          location: String(r[3]||'').trim(),
+          worker_pay: safeNum(r[4]),
+          day: String(r[5]||'').trim(),
+          worker: String(r[6]||'').trim(),
+          note: String(r[7]||'').trim()
+        });
+      }
+    }
+
+    // 4) 요일별 파싱
+    const daily = [];
+    if(wb.SheetNames.includes('요일별정리')) {
+      const ws = wb.Sheets['요일별정리'];
+      const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
+      let curDay = '';
+      for(let i=1; i<rows.length; i++) {
+        const r = rows[i];
+        if(!r) continue;
+        const a = String(r[0]||'').trim();
+        if(a.includes('요일')) { curDay = a; continue; }
+        const company = String(r[1]||'').trim();
+        if(!company || company==='업체') continue;
+        daily.push({
+          day: curDay,
+          company: company,
+          location: String(r[2]||'').trim(),
+          worker: String(r[3]||'').trim(),
+          amount: safeNum(r[4]),
+          access_key: String(r[5]||'').trim(),
+          parking: String(r[6]||'').trim()
+        });
+      }
+    }
+
+    status.textContent = `파싱 완료: 직원 ${employees.length}, 계획 ${plans.length}, 구역 ${areas.length}, 요일별 ${daily.length}건. 업로드 중...`;
+
+    // 5) Supabase에 업로드 (기존 데이터 삭제 후 삽입)
+    // 삭제
+    await sb.from('monthly_plans').delete().neq('id', 0);
+    await sb.from('monthly_areas').delete().neq('id', 0);
+    await sb.from('daily_schedule').delete().neq('id', 0);
+    await sb.from('employees').delete().neq('id', 0);
+
+    // 삽입 (50개씩 배치)
+    if(employees.length) {
+      for(let i=0; i<employees.length; i+=50) {
+        await sb.from('employees').insert(employees.slice(i, i+50));
+      }
+    }
+    if(plans.length) {
+      for(let i=0; i<plans.length; i+=50) {
+        await sb.from('monthly_plans').insert(plans.slice(i, i+50));
+      }
+    }
+    if(areas.length) {
+      for(let i=0; i<areas.length; i+=50) {
+        await sb.from('monthly_areas').insert(areas.slice(i, i+50));
+      }
+    }
+    if(daily.length) {
+      for(let i=0; i<daily.length; i+=50) {
+        await sb.from('daily_schedule').insert(daily.slice(i, i+50));
+      }
+    }
+
+    // settings 업데이트
+    await sb.from('settings').delete().eq('key', 'last_import');
+    await sb.from('settings').insert({key:'last_import', value: new Date().toLocaleString('ko-KR')});
+
+    status.innerHTML = `<span style="color:var(--accent);font-weight:600">✅ 업로드 완료!</span><br>직원 ${employees.length}명, 계획 ${plans.length}건, 구역 ${areas.length}건, 요일별 ${daily.length}건`;
+    
+    // 데이터 새로고침
+    await loadAllData();
+    input.value = '';
+    
+  } catch(err) {
+    status.innerHTML = `<span style="color:var(--red)">❌ 오류: ${err.message}</span>`;
+    console.error(err);
+  }
+}
+
+function safeNum(v) {
+  if(v == null) return 0;
+  const n = Number(String(v).replace(/[,\s]/g, ''));
+  return isNaN(n) ? 0 : Math.round(n);
 }
 </script>
 </body>
