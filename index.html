@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>ì¤í¼ì¤í´ë¦°íë¡</title>
+<title>오피스클린프로</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -38,12 +38,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* === ì¤í¬ë¡¤ë° === */
+/* === 스크롤바 === */
 ::-webkit-scrollbar { width:6px; }
 ::-webkit-scrollbar-track { background:transparent; }
 ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
 
-/* === ë¡ê·¸ì¸ === */
+/* === 로그인 === */
 #loginScreen {
   min-height:100vh;
   display:flex;
@@ -132,7 +132,7 @@ body {
   min-height: 20px;
 }
 
-/* === ë©ì¸ ì± === */
+/* === 메인 앱 === */
 #app { display:none; min-height:100vh; }
 .topbar {
   position: sticky;
@@ -166,7 +166,7 @@ body {
 }
 .topbar-logout:hover { border-color: var(--red); color: var(--red); }
 
-/* === í­ ë¤ë¹ê²ì´ì === */
+/* === 탭 네비게이션 === */
 .nav-tabs {
   display: flex;
   gap: 4px;
@@ -198,14 +198,14 @@ body {
   font-weight: 600;
 }
 
-/* === ì»¨íì¸  ìì­ === */
+/* === 컨텐츠 영역 === */
 .content {
   padding: 20px 16px;
   max-width: 960px;
   margin: 0 auto;
 }
 
-/* === ëìë³´ë ì¹´ë === */
+/* === 대시보드 카드 === */
 .stat-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -242,7 +242,7 @@ body {
   letter-spacing: -0.5px;
 }
 
-/* === ì ì í === */
+/* === 월 선택 === */
 .month-selector {
   display: flex;
   gap: 8px;
@@ -268,7 +268,7 @@ body {
   font-weight: 700;
 }
 
-/* === ê²ì === */
+/* === 검색 === */
 .search-box {
   width: 100%;
   padding: 12px 16px 12px 40px;
@@ -287,7 +287,7 @@ body {
 }
 .search-box:focus { border-color: var(--accent); }
 
-/* === íì´ë¸/ë¦¬ì¤í¸ === */
+/* === 테이블/리스트 === */
 .data-card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -349,7 +349,7 @@ body {
   margin-left: 12px;
 }
 
-/* === êµ¬ì­ ê·¸ë£¹ === */
+/* === 구역 그룹 === */
 .area-group {
   background: var(--card);
   border: 1px solid var(--border);
@@ -376,7 +376,7 @@ body {
   color: var(--accent);
 }
 
-/* === ìì¼ ì¹´ë === */
+/* === 요일 카드 === */
 .day-card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -396,7 +396,7 @@ body {
 }
 .day-emoji { font-size: 20px; }
 
-/* === ë´ë¹ìë³ === */
+/* === 담당자별 === */
 .worker-card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -437,7 +437,7 @@ body {
 .worker-detail-company { color: var(--text); }
 .worker-detail-amount { color: var(--accent); font-weight: 600; }
 
-/* === ëª¨ë¬ === */
+/* === 모달 === */
 .modal-overlay {
   display: none;
   position: fixed;
@@ -502,7 +502,7 @@ body {
 }
 .modal-close:hover { background: var(--border); }
 
-/* === ë¡ë© === */
+/* === 로딩 === */
 .loading {
   display: flex;
   justify-content: center;
@@ -521,7 +521,7 @@ body {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* === ë¹ì´ìì === */
+/* === 비어있음 === */
 .empty {
   text-align: center;
   padding: 40px 20px;
@@ -529,7 +529,7 @@ body {
   font-size: 14px;
 }
 
-/* === ì¹ì íì´í === */
+/* === 섹션 타이틀 === */
 .section-title {
   font-size: 18px;
   font-weight: 700;
@@ -537,7 +537,7 @@ body {
   letter-spacing: -0.3px;
 }
 
-/* === ë°ìí === */
+/* === 반응형 === */
 @media (max-width: 480px) {
   .login-box { padding: 36px 24px; }
   .stat-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -545,68 +545,68 @@ body {
   .content { padding: 16px 12px; }
 }
 
-/* === ì ê¸°/í¼ì¹ê¸° === */
+/* === 접기/펼치기 === */
 .collapsible-body { display:none; }
 .collapsible-body.open { display:block; }
 </style>
 </head>
 <body>
 
-<!-- ë¡ê·¸ì¸ íë©´ -->
+<!-- 로그인 화면 -->
 <div id="loginScreen">
   <div class="login-box">
-    <div class="login-logo">ì¤í¼ì¤í´ë¦°<span>íë¡</span></div>
-    <div class="login-sub">ì²­ì ê´ë¦¬ ìì¤í</div>
+    <div class="login-logo">오피스클린<span>프로</span></div>
+    <div class="login-sub">청소 관리 시스템</div>
     <div class="input-group">
-      <label>ìì´ë</label>
-      <input type="text" id="loginId" placeholder="ID ìë ¥" autocomplete="off">
+      <label>아이디</label>
+      <input type="text" id="loginId" placeholder="ID 입력" autocomplete="off">
     </div>
     <div class="input-group">
-      <label>ë¹ë°ë²í¸</label>
-      <input type="password" id="loginPw" placeholder="ë¹ë°ë²í¸ ìë ¥" autocomplete="off">
+      <label>비밀번호</label>
+      <input type="password" id="loginPw" placeholder="비밀번호 입력" autocomplete="off">
     </div>
-    <button class="login-btn" onclick="doLogin()">ë¡ê·¸ì¸</button>
+    <button class="login-btn" onclick="doLogin()">로그인</button>
     <div class="login-error" id="loginError"></div>
   </div>
 </div>
 
-<!-- ë©ì¸ ì± -->
+<!-- 메인 앱 -->
 <div id="app">
   <div class="topbar">
-    <div class="topbar-title">ì¤í¼ì¤í´ë¦°<span>íë¡</span></div>
-    <button class="topbar-logout" onclick="doLogout()">ë¡ê·¸ìì</button>
+    <div class="topbar-title">오피스클린<span>프로</span></div>
+    <button class="topbar-logout" onclick="doLogout()">로그아웃</button>
   </div>
   <div class="nav-tabs" id="navTabs"></div>
   <div class="content" id="mainContent"></div>
 </div>
 
-<!-- ëª¨ë¬ -->
+<!-- 모달 -->
 <div class="modal-overlay" id="modal" onclick="closeModal(event)">
   <div class="modal-content" id="modalBody"></div>
 </div>
 
-<!-- ìë¡ë ëª¨ë¬ -->
+<!-- 업로드 모달 -->
 <div class="modal-overlay" id="uploadModal" onclick="if(event.target===this)this.classList.remove('show')">
   <div class="modal-content">
-    <div class="modal-title">ð ìì íì¼ ìë¡ë</div>
-    <div class="modal-sub">ìì íì¼ì ì ííë©´ ê¸°ì¡´ ë°ì´í°ë¥¼ êµì²´í©ëë¤</div>
+    <div class="modal-title">📁 엑셀 파일 업로드</div>
+    <div class="modal-sub">엑셀 파일을 선택하면 기존 데이터를 교체합니다</div>
     <input type="file" id="excelFile" accept=".xlsx,.xls" style="display:none" onchange="handleExcelFile(this)">
-    <button onclick="document.getElementById('excelFile').click()" style="width:100%;padding:16px;background:var(--accent);color:#0f1117;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:12px">íì¼ ì í</button>
+    <button onclick="document.getElementById('excelFile').click()" style="width:100%;padding:16px;background:var(--accent);color:#0f1117;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:12px">파일 선택</button>
     <div id="uploadStatus" style="font-size:13px;color:var(--text2);text-align:center;min-height:40px;line-height:1.6"></div>
-    <button class="modal-close" onclick="document.getElementById('uploadModal').classList.remove('show')">ë«ê¸°</button>
+    <button class="modal-close" onclick="document.getElementById('uploadModal').classList.remove('show')">닫기</button>
   </div>
 </div>
 
 <script>
 // ==========================================
-//  Supabase ì¤ì 
+//  Supabase 설정
 // ==========================================
 const SUPABASE_URL = 'https://apnwhqklpwzevguyrjwd.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwbndocWtscHd6ZXZndXlyandkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MTA3NTYsImV4cCI6MjA4ODA4Njc1Nn0.rjW8cVCZTsewnJoTYuzGQi6vA3xSdxUnft0vQXft168';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ==========================================
-//  ì ì­ ìí
+//  전역 상태
 // ==========================================
 let DATA = { employees:[], plans:{}, areas:{}, daily:[], settings:{}, months:[] };
 let currentTab = 'dashboard';
@@ -616,20 +616,20 @@ let loggedInUser = '';
     let isAdminUser = true;
 
 // ==========================================
-//  ì í¸ë¦¬í°
+//  유틸리티
 // ==========================================
-const fmt = n => (n||0).toLocaleString('ko-KR') + 'ì';
+const fmt = n => (n||0).toLocaleString('ko-KR') + '원';
 const fmtShort = n => {
-  if(!n) return '0ì';
-  if(n >= 10000) return (n/10000).toFixed(n%10000?1:0) + 'ë§ì';
-  return n.toLocaleString('ko-KR') + 'ì';
+  if(!n) return '0원';
+  if(n >= 10000) return (n/10000).toFixed(n%10000?1:0) + '만원';
+  return n.toLocaleString('ko-KR') + '원';
 };
 const dayEmoji = d => ({
-  'ììì¼':'ð¢','íìì¼':'ðµ','ììì¼':'ð¡','ëª©ìì¼':'ð ','ê¸ìì¼':'ð´','í ìì¼':'ð£','ì¼ìì¼':'âª'
-}[d]||'ð');
+  '월요일':'🟢','화요일':'🔵','수요일':'🟡','목요일':'🟠','금요일':'🔴','토요일':'🟣','일요일':'⚪'
+}[d]||'📅');
 
 // ==========================================
-//  ë¡ê·¸ì¸
+//  로그인
 // ==========================================
 async function doLogin() {
       const idInput = document.getElementById('loginId');
@@ -638,7 +638,7 @@ async function doLogin() {
       const id = idInput.value.trim();
       const pw = pwInput.value.trim();
       if (!id || !pw) {
-        errorEl.textContent = 'ìì´ëì ë¹ë°ë²í¸ë¥¼ ìë ¥íì¸ì';
+        errorEl.textContent = '아이디와 비밀번호를 입력하세요';
         errorEl.style.display = 'block';
         return;
       }
@@ -650,7 +650,7 @@ async function doLogin() {
           const adminPwRow = settings.find(r => r.key === 'admin_pw');
           if (adminIdRow && adminPwRow && id === adminIdRow.value && pw === adminPwRow.value) {
             loggedIn = true;
-            currentUser = { role: 'admin', name: 'ê´ë¦¬ì', login_id: id };
+            currentUser = { role: 'admin', name: '관리자', login_id: id };
             isAdminUser = true;
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('app').style.display = 'block';
@@ -668,15 +668,15 @@ async function doLogin() {
           loadAllData();
           return;
         }
-        errorEl.textContent = 'ìì´ë ëë ë¹ë°ë²í¸ê° ì¼ì¹íì§ ììµëë¤';
+        errorEl.textContent = '아이디 또는 비밀번호가 일치하지 않습니다';
         errorEl.style.display = 'block';
       } catch (err) {
-        errorEl.textContent = 'ë¡ê·¸ì¸ ì¤ ì¤ë¥ê° ë°ìíìµëë¤';
+        errorEl.textContent = '로그인 중 오류가 발생했습니다';
         errorEl.style.display = 'block';
       }
     }
 
-// Enter í¤ë¡ ë¡ê·¸ì¸
+// Enter 키로 로그인
 document.addEventListener('keydown', e => {
   if(e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') doLogin();
 });
@@ -689,13 +689,13 @@ function doLogout() {
 }
 
 // ==========================================
-//  ë°ì´í° ë¡ë©
+//  데이터 로딩
 // ==========================================
 async function loadAllData() {
-  document.getElementById('mainContent').innerHTML = '<div class="loading"><div class="spinner"></div>ë°ì´í° ë¶ë¬ì¤ë ì¤...</div>';
+  document.getElementById('mainContent').innerHTML = '<div class="loading"><div class="spinner"></div>데이터 불러오는 중...</div>';
   
   try {
-    // ë³ë ¬ë¡ ëª¨ë  ë°ì´í° ë¡ë
+    // 병렬로 모든 데이터 로드
     const [empRes, planRes, areaRes, dailyRes, setRes] = await Promise.all([
       sb.from('employees').select('*').order('id'),
       sb.from('monthly_plans').select('*').order('id'),
@@ -709,7 +709,7 @@ async function loadAllData() {
     (setRes.data||[]).forEach(r => DATA.settings[r.key] = r.value);
     DATA.daily = dailyRes.data || [];
     
-    // ìë³ ê·¸ë£¹í - plans
+    // 월별 그룹핑 - plans
     const allPlans = planRes.data || [];
     const monthSet = new Set();
     DATA.plans = {};
@@ -719,7 +719,7 @@ async function loadAllData() {
       DATA.plans[r.month].push(r);
     });
     
-    // ìë³ ê·¸ë£¹í - areas
+    // 월별 그룹핑 - areas
     const allAreas = areaRes.data || [];
     DATA.areas = {};
     allAreas.forEach(r => {
@@ -734,21 +734,21 @@ async function loadAllData() {
     buildNav();
     navigateTo(currentTab);
   } catch(err) {
-    document.getElementById('mainContent').innerHTML = '<div class="empty">ë°ì´í° ë¡ë ì¤í¨: ' + err.message + '</div>';
+    document.getElementById('mainContent').innerHTML = '<div class="empty">데이터 로드 실패: ' + err.message + '</div>';
   }
 }
 
 // ==========================================
-//  ë¤ë¹ê²ì´ì
+//  네비게이션
 // ==========================================
 function buildNav() {
   const tabs = [
-    { id:'dashboard', label:'ð ëìë³´ë' },
-    { id:'clients',   label:'ð¢ ê±°ëì²' },
-    { id:'workers',   label:'ð· ë´ë¹ìë³' },
-    { id:'weekday',   label:'ð ìì¼ë³' },
-    { id:'tasks',     label:'ð ìì²­ì¬í­' },
-    { id:'compinfo',  label:'ð  ìì²´ì ë³´' }
+    { id:'dashboard', label:'📊 대시보드' },
+    { id:'clients',   label:'🏢 거래처' },
+    { id:'workers',   label:'👷 담당자별' },
+    { id:'weekday',   label:'📅 요일별' },
+    { id:'tasks',     label:'📋 요청사항' },
+    { id:'compinfo',  label:'🏠 업체정보' }
   ];
   document.getElementById('navTabs').innerHTML = tabs.map(t =>
     `<button class="nav-tab ${currentTab===t.id?'active':''}" onclick="navigateTo('${t.id}')">${t.label}</button>`
@@ -770,7 +770,7 @@ function navigateTo(tab) {
 }
 
 // ==========================================
-//  ëìë³´ë
+//  대시보드
 // ==========================================
 function renderDashboard(el) {
   let plans = DATA.plans[currentMonth] || [];
@@ -783,28 +783,28 @@ function renderDashboard(el) {
   
   el.innerHTML = `
     ${monthSelector()}
-    <button onclick="document.getElementById('uploadModal').classList.add('show')" style="width:100%;padding:14px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;margin-bottom:16px;transition:all .2s">ð ìì íì¼ ìë°ì´í¸</button>
+    <button onclick="document.getElementById('uploadModal').classList.add('show')" style="width:100%;padding:14px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;margin-bottom:16px;transition:all .2s">📁 엑셀 파일 업데이트</button>
     <div class="stat-grid">
       <div class="stat-card green">
-        <div class="stat-label">ì´ ìë¹</div>
+        <div class="stat-label">총 수당</div>
         <div class="stat-value">${fmtShort(totalPay)}</div>
       </div>
       <div class="stat-card blue">
-        <div class="stat-label">ì¤ìë ¹ì¡</div>
+        <div class="stat-label">실수령액</div>
         <div class="stat-value">${fmtShort(totalReal)}</div>
       </div>
       <div class="stat-card yellow">
-        <div class="stat-label">ê±°ëì² ì</div>
-        <div class="stat-value">${companies.size}ê³³</div>
+        <div class="stat-label">거래처 수</div>
+        <div class="stat-value">${companies.size}곳</div>
       </div>
       <div class="stat-card purple">
-        <div class="stat-label">ë´ë¹ì ì</div>
-        <div class="stat-value">${workers.size}ëª</div>
+        <div class="stat-label">담당자 수</div>
+        <div class="stat-value">${workers.size}명</div>
       </div>
     </div>
-    <div class="section-title">ì§ì íí©</div>
+    <div class="section-title">직원 현황</div>
     <div class="data-card">
-      ${DATA.employees.filter(e => e.name && e.name !== 'ê´ë¦¬ì ìì´ë').map(e => `
+      ${DATA.employees.filter(e => e.name && e.name !== '관리자 아이디').map(e => `
         <div class="data-row" style="cursor:default">
           <div class="data-row-left">
             <div class="data-row-company">${e.name}</div>
@@ -817,15 +817,15 @@ function renderDashboard(el) {
 }
 
 // ==========================================
-//  ê±°ëì²
+//  거래처
 // ==========================================
 function renderClients(el) {
   const areas = DATA.areas[currentMonth] || [];
   
-  // êµ¬ì­ë³ ê·¸ë£¹í
+  // 구역별 그룹핑
   const groups = {};
   areas.forEach(r => {
-    const name = r.area_name || 'ë¯¸ë¶ë¥';
+    const name = r.area_name || '미분류';
     if(!groups[name]) groups[name] = { total:0, items:[] };
     groups[name].items.push(r);
     groups[name].total += (r.real_amount||0);
@@ -833,12 +833,12 @@ function renderClients(el) {
   
   el.innerHTML = `
     ${monthSelector()}
-    <input class="search-box" type="text" placeholder="ê±°ëì² ê²ì..." oninput="filterClients(this.value)">
+    <input class="search-box" type="text" placeholder="거래처 검색..." oninput="filterClients(this.value)">
     <div id="clientList">
       ${Object.entries(groups).map(([name, g], i) => `
         <div class="area-group client-group" data-name="${name}">
           <div class="area-header" onclick="toggleCollapse('area${i}')">
-            <div class="area-name">${name} <span style="font-size:12px;color:var(--text2);font-weight:400">${g.items.length}ê³³</span></div>
+            <div class="area-name">${name} <span style="font-size:12px;color:var(--text2);font-weight:400">${g.items.length}곳</span></div>
             <div class="area-total">${fmtShort(g.total)}</div>
           </div>
           <div class="collapsible-body open" id="area${i}">
@@ -846,7 +846,7 @@ function renderClients(el) {
               <div class="data-row" onclick='showDetail(${JSON.stringify(r).replace(/'/g,"&#39;")})'>
                 <div class="data-row-left">
                   <div class="data-row-company">${r.company||'-'}</div>
-                  <div class="data-row-sub">${r.location||''} Â· ${r.worker||'-'} Â· ${r.day||'-'}</div>
+                  <div class="data-row-sub">${r.location||''} · ${r.worker||'-'} · ${r.day||'-'}</div>
                 </div>
                 <div class="data-row-amount">${fmtShort(r.real_amount)}</div>
               </div>
@@ -873,31 +873,31 @@ function filterClients(q) {
 }
 
 // ==========================================
-//  ë´ë¹ìë³
+//  담당자별
 // ==========================================
 function renderWorkers(el) {
   let plans = DATA.plans[currentMonth] || [];
       if(_empName) plans = filterByEmployee(plans, _empName);
   
-  // ë´ë¹ìë³ ê·¸ë£¹í
+  // 담당자별 그룹핑
   const groups = {};
   plans.forEach(r => {
-    const w = r.worker || 'ë¯¸ì§ì ';
+    const w = r.worker || '미지정';
     if(!groups[w]) groups[w] = { total:0, items:[] };
     groups[w].items.push(r);
     groups[w].total += (r.real_amount||0);
   });
   
-  // í©ê³ ë´ë¦¼ì°¨ì
+  // 합계 내림차순
   const sorted = Object.entries(groups).sort((a,b) => b[1].total - a[1].total);
   
   el.innerHTML = `
     ${monthSelector()}
-    <div class="section-title">ë´ë¹ìë³ ìë¹ ë´ì­</div>
+    <div class="section-title">담당자별 수당 내역</div>
     ${sorted.map(([name, g], i) => `
       <div class="worker-card">
         <div class="worker-header" onclick="toggleCollapse('worker${i}')">
-          <div class="worker-name">ð· ${name} <span style="font-size:12px;color:var(--text2);font-weight:400">${g.items.length}ê±´</span></div>
+          <div class="worker-name">👷 ${name} <span style="font-size:12px;color:var(--text2);font-weight:400">${g.items.length}건</span></div>
           <div class="worker-pay">${fmtShort(g.total)}</div>
         </div>
         <div class="collapsible-body" id="worker${i}">
@@ -914,30 +914,30 @@ function renderWorkers(el) {
 }
 
 // ==========================================
-//  ìì¼ë³
+//  요일별
 // ==========================================
 function renderWeekday(el) {
-  const days = ['ììì¼','íìì¼','ììì¼','ëª©ìì¼','ê¸ìì¼','í ìì¼','ì¼ìì¼'];
+  const days = ['월요일','화요일','수요일','목요일','금요일','토요일','일요일'];
   const groups = {};
   ((_empName) ? filterByEmployee(DATA.daily, _empName) : DATA.daily).forEach(r => {
-    const d = r.day || 'ê¸°í';
+    const d = r.day || '기타';
     if(!groups[d]) groups[d] = [];
     groups[d].push(r);
   });
   
   el.innerHTML = `
-    <div class="section-title">ìì¼ë³ ì¼ì </div>
+    <div class="section-title">요일별 일정</div>
     ${days.filter(d => groups[d] && groups[d].length).map(d => `
       <div class="day-card">
         <div class="day-header">
           <span class="day-emoji">${dayEmoji(d)}</span> ${d}
-          <span style="font-size:12px;color:var(--text2);font-weight:400;margin-left:auto">${groups[d].length}ê±´</span>
+          <span style="font-size:12px;color:var(--text2);font-weight:400;margin-left:auto">${groups[d].length}건</span>
         </div>
         ${groups[d].map(r => `
           <div class="data-row" onclick='showDailyDetail(${JSON.stringify(r).replace(/'/g,"&#39;")})'>
             <div class="data-row-left">
               <div class="data-row-company">${r.company||'-'}</div>
-              <div class="data-row-sub">${r.location||''} Â· ${r.worker||'-'}</div>
+              <div class="data-row-sub">${r.location||''} · ${r.worker||'-'}</div>
             </div>
             <div class="data-row-amount">${fmtShort(r.amount)}</div>
           </div>
@@ -948,7 +948,7 @@ function renderWeekday(el) {
 }
 
 // ==========================================
-//  ì ì íê¸°
+//  월 선택기
 // ==========================================
 function monthSelector() {
   return `<div class="month-selector">
@@ -962,31 +962,31 @@ function selectMonth(m) {
 }
 
 // ==========================================
-//  ìì²­ì¬í­
+//  요청사항
 // ==========================================
 async function renderTasks(el) {
-  el.innerHTML = '<div class="loading"><div class="spinner"></div>ìì²­ì¬í­ ë¶ë¬ì¤ë ì¤...</div>';
+  el.innerHTML = '<div class="loading"><div class="spinner"></div>요청사항 불러오는 중...</div>';
   
-  // 1ì£¼ì¼ ì´ë´ ë°ì´í°ë§ ê°ì ¸ì¤ê¸°
+  // 1주일 이내 데이터만 가져오기
   const weekAgo = new Date(Date.now() - 7*24*60*60*1000).toISOString();
   const { data: tasks, error } = await sb.from('company_tasks')
     .select('*')
     .gte('created_at', weekAgo)
     .order('created_at', {ascending: false});
   
-  if(error) { el.innerHTML = '<div class="empty">ì¤ë¥: '+error.message+'</div>'; return; }
+  if(error) { el.innerHTML = '<div class="empty">오류: '+error.message+'</div>'; return; }
   
-  // 1ì£¼ì¼ ì§ë ë°ì´í° ìë ì­ì 
+  // 1주일 지난 데이터 자동 삭제
   sb.from('company_tasks').delete().lt('created_at', weekAgo).then(()=>{});
   
   const taskList = (tasks||[]);
   
   el.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <div class="section-title" style="margin-bottom:0">ð ìì²´ ìì²­ì¬í­</div>
-      <button onclick="showAddTaskModal()" style="padding:10px 18px;background:var(--accent);color:#0f1117;border:none;border-radius:10px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer">+ ì ìì²­</button>
+      <div class="section-title" style="margin-bottom:0">📋 업체 요청사항</div>
+      <button onclick="showAddTaskModal()" style="padding:10px 18px;background:var(--accent);color:#0f1117;border:none;border-radius:10px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer">+ 새 요청</button>
     </div>
-    ${taskList.length === 0 ? '<div class="empty">ë±ë¡ë ìì²­ì¬í­ì´ ììµëë¤</div>' : ''}
+    ${taskList.length === 0 ? '<div class="empty">등록된 요청사항이 없습니다</div>' : ''}
     ${taskList.map(t => {
       const items = [];
       if(t.task1) items.push({text:t.task1, checked:t.check1, checker:t.checker1, idx:1});
@@ -1002,21 +1002,21 @@ async function renderTasks(el) {
           <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
             <div>
               <div style="font-size:15px;font-weight:700">${t.company}</div>
-              <div style="font-size:11px;color:var(--text2);margin-top:4px">ìì±: ${t.created_by||'-'} Â· ${new Date(t.created_at).toLocaleDateString('ko-KR')} Â· <span style="color:${daysLeft<=2?'var(--red)':'var(--text2)'}">D-${daysLeft}</span></div>
+              <div style="font-size:11px;color:var(--text2);margin-top:4px">작성: ${t.created_by||'-'} · ${new Date(t.created_at).toLocaleDateString('ko-KR')} · <span style="color:${daysLeft<=2?'var(--red)':'var(--text2)'}">D-${daysLeft}</span></div>
             </div>
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:12px;color:${allChecked?'var(--accent)':'var(--yellow)'};font-weight:600">${checkedCount}/${items.length}</span>
-              <button onclick="deleteTask(${t.id})" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:16px;padding:4px" title="ì­ì ">â</button>
+              <button onclick="deleteTask(${t.id})" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:16px;padding:4px" title="삭제">✕</button>
             </div>
           </div>
           ${items.map(item => `
             <div style="padding:12px 20px;border-bottom:1px solid rgba(42,47,62,0.4);display:flex;align-items:center;gap:12px">
               <div onclick="toggleCheck(${t.id},${item.idx},${!item.checked})" style="width:24px;height:24px;border-radius:6px;border:2px solid ${item.checked?'var(--accent)':'var(--border)'};background:${item.checked?'var(--accent)':'transparent'};cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s">
-                ${item.checked ? '<span style="color:#0f1117;font-size:14px;font-weight:700">â</span>' : ''}
+                ${item.checked ? '<span style="color:#0f1117;font-size:14px;font-weight:700">✓</span>' : ''}
               </div>
               <div style="flex:1;min-width:0">
                 <div style="font-size:14px;${item.checked?'text-decoration:line-through;color:var(--text2)':''}">${item.text}</div>
-                ${item.checked && item.checker ? `<div style="font-size:11px;color:var(--accent);margin-top:2px">â ${item.checker} íì¸</div>` : ''}
+                ${item.checked && item.checker ? `<div style="font-size:11px;color:var(--accent);margin-top:2px">✓ ${item.checker} 확인</div>` : ''}
               </div>
             </div>
           `).join('')}
@@ -1035,44 +1035,44 @@ async function toggleCheck(taskId, idx, checked) {
 }
 
 async function deleteTask(taskId) {
-  if(!confirm('ì´ ìì²­ì¬í­ì ì­ì íìê² ìµëê¹?')) return;
+  if(!confirm('이 요청사항을 삭제하시겠습니까?')) return;
   await sb.from('company_tasks').delete().eq('id', taskId);
   renderTasks(document.getElementById('mainContent'));
 }
 
 function showAddTaskModal() {
-  // ê±°ëì² ëª©ë¡ ê°ì ¸ì¤ê¸°
+  // 거래처 목록 가져오기
   const companies = new Set();
   Object.values(DATA.areas).forEach(arr => arr.forEach(r => { if(r.company) companies.add(r.company); }));
   Object.values(DATA.plans).forEach(arr => arr.forEach(r => { if(r.company) companies.add(r.company); }));
   const companyList = Array.from(companies).sort();
   
   document.getElementById('modalBody').innerHTML = `
-    <div class="modal-title">ð ì ìì²­ì¬í­ ë±ë¡</div>
-    <div class="modal-sub">ìì²´ë¥¼ ì ííê³  ìì²­ì¬í­ì ìë ¥íì¸ì (ìµë 4ê°)</div>
+    <div class="modal-title">📋 새 요청사항 등록</div>
+    <div class="modal-sub">업체를 선택하고 요청사항을 입력하세요 (최대 4개)</div>
     <div style="margin-bottom:14px">
-      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">ìì²´ëª</label>
-      <input type="text" id="taskCompany" list="companyDatalist" placeholder="ìì²´ëª ìë ¥ ëë ì í" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none">
+      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">업체명</label>
+      <input type="text" id="taskCompany" list="companyDatalist" placeholder="업체명 입력 또는 선택" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none">
       <datalist id="companyDatalist">${companyList.map(c => `<option value="${c}">`).join('')}</datalist>
     </div>
     <div style="margin-bottom:10px">
-      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">ìì²­ì¬í­ 1</label>
-      <input type="text" id="taskItem1" placeholder="ìì²­ì¬í­ ìë ¥" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none">
+      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">요청사항 1</label>
+      <input type="text" id="taskItem1" placeholder="요청사항 입력" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none">
     </div>
     <div style="margin-bottom:10px">
-      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">ìì²­ì¬í­ 2 <span style="color:var(--text2);font-size:11px">(ì í)</span></label>
-      <input type="text" id="taskItem2" placeholder="ìì²­ì¬í­ ìë ¥" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none">
+      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">요청사항 2 <span style="color:var(--text2);font-size:11px">(선택)</span></label>
+      <input type="text" id="taskItem2" placeholder="요청사항 입력" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none">
     </div>
     <div style="margin-bottom:10px">
-      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">ìì²­ì¬í­ 3 <span style="color:var(--text2);font-size:11px">(ì í)</span></label>
-      <input type="text" id="taskItem3" placeholder="ìì²­ì¬í­ ìë ¥" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none">
+      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">요청사항 3 <span style="color:var(--text2);font-size:11px">(선택)</span></label>
+      <input type="text" id="taskItem3" placeholder="요청사항 입력" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none">
     </div>
     <div style="margin-bottom:16px">
-      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">ìì²­ì¬í­ 4 <span style="color:var(--text2);font-size:11px">(ì í)</span></label>
-      <input type="text" id="taskItem4" placeholder="ìì²­ì¬í­ ìë ¥" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none">
+      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">요청사항 4 <span style="color:var(--text2);font-size:11px">(선택)</span></label>
+      <input type="text" id="taskItem4" placeholder="요청사항 입력" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none">
     </div>
-    <button onclick="submitTask()" style="width:100%;padding:14px;background:var(--accent);color:#0f1117;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:8px">ë±ë¡</button>
-    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('show')">ì·¨ì</button>
+    <button onclick="submitTask()" style="width:100%;padding:14px;background:var(--accent);color:#0f1117;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:8px">등록</button>
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('show')">취소</button>
   `;
   document.getElementById('modal').classList.add('show');
 }
@@ -1080,8 +1080,8 @@ function showAddTaskModal() {
 async function submitTask() {
   const company = document.getElementById('taskCompany').value.trim();
   const t1 = document.getElementById('taskItem1').value.trim();
-  if(!company) { alert('ìì²´ëªì ìë ¥íì¸ì'); return; }
-  if(!t1) { alert('ìì²­ì¬í­ì 1ê° ì´ì ìë ¥íì¸ì'); return; }
+  if(!company) { alert('업체명을 입력하세요'); return; }
+  if(!t1) { alert('요청사항을 1개 이상 입력하세요'); return; }
   
   const row = {
     company: company,
@@ -1093,65 +1093,65 @@ async function submitTask() {
   };
   
   const { error } = await sb.from('company_tasks').insert(row);
-  if(error) { alert('ë±ë¡ ì¤í¨: ' + error.message); return; }
+  if(error) { alert('등록 실패: ' + error.message); return; }
   
   document.getElementById('modal').classList.remove('show');
   renderTasks(document.getElementById('mainContent'));
 }
 
 // ==========================================
-//  ìì²´ì ë³´ (ì¶ìë°©ë², ë¶ë¦¬ìê±°ì¥, í¹ì´ì¬í­)
+//  업체정보 (출입방법, 분리수거장, 특이사항)
 // ==========================================
 async function renderCompInfo(el) {
-  el.innerHTML = '<div class="loading"><div class="spinner"></div>ìì²´ì ë³´ ë¶ë¬ì¤ë ì¤...</div>';
+  el.innerHTML = '<div class="loading"><div class="spinner"></div>업체정보 불러오는 중...</div>';
   
   const { data: infos, error } = await sb.from('company_info')
     .select('*')
     .order('company', {ascending: true});
   
-  if(error) { el.innerHTML = '<div class="empty">ì¤ë¥: '+error.message+'</div>'; return; }
+  if(error) { el.innerHTML = '<div class="empty">오류: '+error.message+'</div>'; return; }
   
-  // ìì²´ë³ë¡ ê·¸ë£¹í (ìµì  ê²ë§ íì)
+  // 업체별로 그룹핑 (최신 것만 표시)
   const byCompany = {};
   (infos||[]).forEach(r => {
     if(!byCompany[r.company]) byCompany[r.company] = r;
   });
   const infoList = Object.values(byCompany);
   
-  // ê±°ëì² ëª©ë¡ (ê²ì/ìëìì±ì©)
+  // 거래처 목록 (검색/자동완성용)
   const companies = new Set();
   Object.values(DATA.areas).forEach(arr => arr.forEach(r => { if(r.company) companies.add(r.company); }));
   Object.values(DATA.plans).forEach(arr => arr.forEach(r => { if(r.company) companies.add(r.company); }));
   
   el.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <div class="section-title" style="margin-bottom:0">ð  ìì²´ ì ë³´</div>
-      <button onclick="showAddCompInfoModal()" style="padding:10px 18px;background:var(--accent);color:#0f1117;border:none;border-radius:10px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer">+ ì ë³´ ë±ë¡</button>
+      <div class="section-title" style="margin-bottom:0">🏠 업체 정보</div>
+      <button onclick="showAddCompInfoModal()" style="padding:10px 18px;background:var(--accent);color:#0f1117;border:none;border-radius:10px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer">+ 정보 등록</button>
     </div>
-    <input class="search-box" type="text" placeholder="ìì²´ëª ê²ì..." oninput="filterCompInfo(this.value)">
-    ${infoList.length === 0 ? '<div class="empty">ë±ë¡ë ìì²´ì ë³´ê° ììµëë¤</div>' : ''}
+    <input class="search-box" type="text" placeholder="업체명 검색..." oninput="filterCompInfo(this.value)">
+    ${infoList.length === 0 ? '<div class="empty">등록된 업체정보가 없습니다</div>' : ''}
     <div id="compInfoList">
     ${infoList.map(r => `
       <div class="data-card comp-info-card" data-name="${r.company}" style="border-left:3px solid var(--blue)">
         <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
           <div>
             <div style="font-size:15px;font-weight:700">${r.company}</div>
-            <div style="font-size:11px;color:var(--text2);margin-top:3px">ìì±: ${r.written_by||'-'} Â· ${new Date(r.created_at).toLocaleDateString('ko-KR')}</div>
+            <div style="font-size:11px;color:var(--text2);margin-top:3px">작성: ${r.written_by||'-'} · ${new Date(r.created_at).toLocaleDateString('ko-KR')}</div>
           </div>
         </div>
         ${r.entry_method ? `
         <div style="padding:12px 20px;border-bottom:1px solid rgba(42,47,62,0.4)">
-          <div style="font-size:11px;color:var(--blue);font-weight:600;margin-bottom:4px">ðª ì¶ì ë°©ë²</div>
+          <div style="font-size:11px;color:var(--blue);font-weight:600;margin-bottom:4px">🚪 출입 방법</div>
           <div style="font-size:14px;white-space:pre-wrap">${r.entry_method}</div>
         </div>` : ''}
         ${r.recycling_location ? `
         <div style="padding:12px 20px;border-bottom:1px solid rgba(42,47,62,0.4)">
-          <div style="font-size:11px;color:var(--accent);font-weight:600;margin-bottom:4px">â»ï¸ ë¶ë¦¬ìê±°ì¥ ìì¹</div>
+          <div style="font-size:11px;color:var(--accent);font-weight:600;margin-bottom:4px">♻️ 분리수거장 위치</div>
           <div style="font-size:14px;white-space:pre-wrap">${r.recycling_location}</div>
         </div>` : ''}
         ${r.special_note ? `
         <div style="padding:12px 20px">
-          <div style="font-size:11px;color:var(--yellow);font-weight:600;margin-bottom:4px">â ï¸ í¹ì´ì¬í­</div>
+          <div style="font-size:11px;color:var(--yellow);font-weight:600;margin-bottom:4px">⚠️ 특이사항</div>
           <div style="font-size:14px;white-space:pre-wrap">${r.special_note}</div>
         </div>` : ''}
       </div>
@@ -1176,27 +1176,27 @@ function showAddCompInfoModal() {
   const companyList = Array.from(companies).sort();
   
   document.getElementById('modalBody').innerHTML = `
-    <div class="modal-title">ð  ìì²´ ì ë³´ ë±ë¡</div>
-    <div class="modal-sub">ìì²´ì ì¶ìë°©ë², ë¶ë¦¬ìê±°ì¥ ìì¹, í¹ì´ì¬í­ì ê¸°ë¡íì¸ì</div>
+    <div class="modal-title">🏠 업체 정보 등록</div>
+    <div class="modal-sub">업체의 출입방법, 분리수거장 위치, 특이사항을 기록하세요</div>
     <div style="margin-bottom:14px">
-      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">ìì²´ëª</label>
-      <input type="text" id="ciCompany" list="ciCompanyList" placeholder="ìì²´ëª ìë ¥ ëë ì í" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none">
+      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">업체명</label>
+      <input type="text" id="ciCompany" list="ciCompanyList" placeholder="업체명 입력 또는 선택" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none">
       <datalist id="ciCompanyList">${companyList.map(c => `<option value="${c}">`).join('')}</datalist>
     </div>
     <div style="margin-bottom:14px">
-      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">ðª ì¶ì ë°©ë²</label>
-      <textarea id="ciEntry" rows="3" placeholder="ì: ì ë¬¸ ë¹ë°ë²í¸ 1234#, ì£¼ì°¨ì¥ ìë¬¸ ì¹´ëí¤ íì" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none;resize:vertical"></textarea>
+      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">🚪 출입 방법</label>
+      <textarea id="ciEntry" rows="3" placeholder="예: 정문 비밀번호 1234#, 주차장 옆문 카드키 필요" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none;resize:vertical"></textarea>
     </div>
     <div style="margin-bottom:14px">
-      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">â»ï¸ ë¶ë¦¬ìê±°ì¥ ìì¹</label>
-      <textarea id="ciRecycling" rows="2" placeholder="ì: ì§í1ì¸µ ì£¼ì°¨ì¥ ë, ê±´ë¬¼ ë¤í¸ ì¸ë¶" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none;resize:vertical"></textarea>
+      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">♻️ 분리수거장 위치</label>
+      <textarea id="ciRecycling" rows="2" placeholder="예: 지하1층 주차장 끝, 건물 뒤편 외부" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none;resize:vertical"></textarea>
     </div>
     <div style="margin-bottom:16px">
-      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">â ï¸ í¹ì´ì¬í­</label>
-      <textarea id="ciNote" rows="3" placeholder="ì: ììì¼ ì¤ì  íì ì¤ ì²­ì ê¸ì§, ì¬ì¥ë ìë¦¬ ì£¼ì" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none;resize:vertical"></textarea>
+      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">⚠️ 특이사항</label>
+      <textarea id="ciNote" rows="3" placeholder="예: 월요일 오전 회의 중 청소 금지, 사장님 자리 주의" style="width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:inherit;outline:none;resize:vertical"></textarea>
     </div>
-    <button onclick="submitCompInfo()" style="width:100%;padding:14px;background:var(--accent);color:#0f1117;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:8px">ë±ë¡</button>
-    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('show')">ì·¨ì</button>
+    <button onclick="submitCompInfo()" style="width:100%;padding:14px;background:var(--accent);color:#0f1117;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:8px">등록</button>
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('show')">취소</button>
   `;
   document.getElementById('modal').classList.add('show');
 }
@@ -1207,8 +1207,8 @@ async function submitCompInfo() {
   const recycling = document.getElementById('ciRecycling').value.trim();
   const note = document.getElementById('ciNote').value.trim();
   
-  if(!company) { alert('ìì²´ëªì ìë ¥íì¸ì'); return; }
-  if(!entry && !recycling && !note) { alert('ìµì 1ê° í­ëª©ì ìë ¥íì¸ì'); return; }
+  if(!company) { alert('업체명을 입력하세요'); return; }
+  if(!entry && !recycling && !note) { alert('최소 1개 항목을 입력하세요'); return; }
   
   const { error } = await sb.from('company_info').insert({
     company: company,
@@ -1218,14 +1218,14 @@ async function submitCompInfo() {
     written_by: loggedInUser
   });
   
-  if(error) { alert('ë±ë¡ ì¤í¨: ' + error.message); return; }
+  if(error) { alert('등록 실패: ' + error.message); return; }
   
   document.getElementById('modal').classList.remove('show');
   renderCompInfo(document.getElementById('mainContent'));
 }
 
 // ==========================================
-//  ì ê¸°/í¼ì¹ê¸°
+//  접기/펼치기
 // ==========================================
 function toggleCollapse(id) {
   const el = document.getElementById(id);
@@ -1233,18 +1233,18 @@ function toggleCollapse(id) {
 }
 
 // ==========================================
-//  ìì¸ ëª¨ë¬
+//  상세 모달
 // ==========================================
 function showDetail(r) {
   document.getElementById('modalBody').innerHTML = `
     <div class="modal-title">${r.company||'-'}</div>
-    <div class="modal-sub">${r.area_name||''} Â· ${r.area_code||''}</div>
-    <div class="modal-info"><span class="modal-info-label">ìì¹</span><span class="modal-info-value">${r.location||'-'}</span></div>
-    <div class="modal-info"><span class="modal-info-label">ë´ë¹ì</span><span class="modal-info-value">${r.worker||'-'}</span></div>
-    <div class="modal-info"><span class="modal-info-label">ìì¼</span><span class="modal-info-value">${r.day||'-'}</span></div>
-    <div class="modal-info"><span class="modal-info-label">ìë¹</span><span class="modal-info-value" style="color:var(--accent)">${fmt(r.real_amount)}</span></div>
-    <div class="modal-info"><span class="modal-info-label">ë¹ê³ </span><span class="modal-info-value">${r.note||'-'}</span></div>
-    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('show')">ë«ê¸°</button>
+    <div class="modal-sub">${r.area_name||''} · ${r.area_code||''}</div>
+    <div class="modal-info"><span class="modal-info-label">위치</span><span class="modal-info-value">${r.location||'-'}</span></div>
+    <div class="modal-info"><span class="modal-info-label">담당자</span><span class="modal-info-value">${r.worker||'-'}</span></div>
+    <div class="modal-info"><span class="modal-info-label">요일</span><span class="modal-info-value">${r.day||'-'}</span></div>
+    <div class="modal-info"><span class="modal-info-label">수당</span><span class="modal-info-value" style="color:var(--accent)">${fmt(r.real_amount)}</span></div>
+    <div class="modal-info"><span class="modal-info-label">비고</span><span class="modal-info-value">${r.note||'-'}</span></div>
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('show')">닫기</button>
   `;
   document.getElementById('modal').classList.add('show');
 }
@@ -1253,12 +1253,12 @@ function showDailyDetail(r) {
   document.getElementById('modalBody').innerHTML = `
     <div class="modal-title">${r.company||'-'}</div>
     <div class="modal-sub">${r.day||''}</div>
-    <div class="modal-info"><span class="modal-info-label">ìì¹</span><span class="modal-info-value">${r.location||'-'}</span></div>
-    <div class="modal-info"><span class="modal-info-label">ë´ë¹ì</span><span class="modal-info-value">${r.worker||'-'}</span></div>
-    <div class="modal-info"><span class="modal-info-label">ê¸ì¡</span><span class="modal-info-value" style="color:var(--accent)">${fmt(r.amount)}</span></div>
-    <div class="modal-info"><span class="modal-info-label">ì¶ìí¤</span><span class="modal-info-value">${r.access_key||'-'}</span></div>
-    <div class="modal-info"><span class="modal-info-label">ì£¼ì°¨</span><span class="modal-info-value">${r.parking||'-'}</span></div>
-    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('show')">ë«ê¸°</button>
+    <div class="modal-info"><span class="modal-info-label">위치</span><span class="modal-info-value">${r.location||'-'}</span></div>
+    <div class="modal-info"><span class="modal-info-label">담당자</span><span class="modal-info-value">${r.worker||'-'}</span></div>
+    <div class="modal-info"><span class="modal-info-label">금액</span><span class="modal-info-value" style="color:var(--accent)">${fmt(r.amount)}</span></div>
+    <div class="modal-info"><span class="modal-info-label">출입키</span><span class="modal-info-value">${r.access_key||'-'}</span></div>
+    <div class="modal-info"><span class="modal-info-label">주차</span><span class="modal-info-value">${r.parking||'-'}</span></div>
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('show')">닫기</button>
   `;
   document.getElementById('modal').classList.add('show');
 }
@@ -1270,23 +1270,23 @@ function closeModal(e) {
 }
 
 // ==========================================
-//  ìì ìë¡ë ì²ë¦¬
+//  엑셀 업로드 처리
 // ==========================================
 async function handleExcelFile(input) {
   const file = input.files[0];
   if(!file) return;
   const status = document.getElementById('uploadStatus');
-  status.innerHTML = '<div class="spinner" style="display:inline-block;width:16px;height:16px;vertical-align:middle;margin-right:8px"></div>íì¼ ì½ë ì¤...';
+  status.innerHTML = '<div class="spinner" style="display:inline-block;width:16px;height:16px;vertical-align:middle;margin-right:8px"></div>파일 읽는 중...';
 
   try {
     const data = await file.arrayBuffer();
     const wb = XLSX.read(data, {type:'array'});
-    status.textContent = 'â íì¼ ì½ê¸° ìë£. ë°ì´í° ë³í ì¤...';
+    status.textContent = '✅ 파일 읽기 완료. 데이터 변환 중...';
 
-    // 1) ì§ì íì± (ì¸ì ì ë³´ ìí¸)
+    // 1) 직원 파싱 (인적정보 시트)
     const employees = [];
-    if(wb.SheetNames.includes('ì¸ì ì ë³´')) {
-      const ws = wb.Sheets['ì¸ì ì ë³´'];
+    if(wb.SheetNames.includes('인적정보')) {
+      const ws = wb.Sheets['인적정보'];
       const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
       for(let i=3; i<rows.length; i++) {
         const r = rows[i];
@@ -1304,15 +1304,15 @@ async function handleExcelFile(input) {
         });
       }
     }
-    status.textContent = `â ì§ì ${employees.length}ëª íì± ìë£`;
+    status.textContent = `✅ 직원 ${employees.length}명 파싱 완료`;
 
-    // 2) ìë³ ê³í íì±
+    // 2) 월별 계획 파싱
     const plans = [];
     const planSheets = [
-      {sheet:'2ìë´ë¹ìììê³í', month:'2ì'},
-      {sheet:'3ìë´ë¹ìììê³í', month:'3ì'},
-      {sheet:'4ìë´ë¹ìììê³í', month:'4ì'},
-      {sheet:'5ìë´ë¹ìììê³í', month:'5ì'},
+      {sheet:'2월담당자예상계획', month:'2월'},
+      {sheet:'3월담당자예상계획', month:'3월'},
+      {sheet:'4월담당자예상계획', month:'4월'},
+      {sheet:'5월담당자예상계획', month:'5월'},
     ];
     for(const ps of planSheets) {
       if(!wb.SheetNames.includes(ps.sheet)) continue;
@@ -1324,7 +1324,7 @@ async function handleExcelFile(input) {
         if(!r || r.length < 15) continue;
         const worker = String(r[10]||'').trim();
         const amt = safeNum(r[9]);
-        if(!worker || !amt || worker==='ë´ë¹ì') continue;
+        if(!worker || !amt || worker==='담당자') continue;
         const company = String(r[3]||'').trim();
         if(company) { lc=company; ll=String(r[4]||'').trim(); }
         plans.push({
@@ -1343,13 +1343,13 @@ async function handleExcelFile(input) {
       }
     }
 
-    // 3) ìë³ êµ¬ì­ íì±
+    // 3) 월별 구역 파싱
     const areas = [];
     const areaSheets = [
-      {sheet:'2ì êµ¬ì­ë³ì ë¦¬', month:'2ì'},
-      {sheet:'3ì êµ¬ì­ë³ì ë¦¬', month:'3ì'},
-      {sheet:'4ì êµ¬ì­ë³ì ë¦¬', month:'4ì'},
-      {sheet:'5ì êµ¬ì­ë³ì ë¦¬', month:'5ì'},
+      {sheet:'2월 구역별정리', month:'2월'},
+      {sheet:'3월 구역별정리', month:'3월'},
+      {sheet:'4월 구역별정리', month:'4월'},
+      {sheet:'5월 구역별정리', month:'5월'},
     ];
     for(const as2 of areaSheets) {
       if(!wb.SheetNames.includes(as2.sheet)) continue;
@@ -1378,19 +1378,19 @@ async function handleExcelFile(input) {
       }
     }
 
-    // 4) ìì¼ë³ íì±
+    // 4) 요일별 파싱
     const daily = [];
-    if(wb.SheetNames.includes('ìì¼ë³ì ë¦¬')) {
-      const ws = wb.Sheets['ìì¼ë³ì ë¦¬'];
+    if(wb.SheetNames.includes('요일별정리')) {
+      const ws = wb.Sheets['요일별정리'];
       const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
       let curDay = '';
       for(let i=1; i<rows.length; i++) {
         const r = rows[i];
         if(!r) continue;
         const a = String(r[0]||'').trim();
-        if(a.includes('ìì¼')) { curDay = a; continue; }
+        if(a.includes('요일')) { curDay = a; continue; }
         const company = String(r[1]||'').trim();
-        if(!company || company==='ìì²´') continue;
+        if(!company || company==='업체') continue;
         daily.push({
           day: curDay,
           company: company,
@@ -1403,16 +1403,16 @@ async function handleExcelFile(input) {
       }
     }
 
-    status.textContent = `íì± ìë£: ì§ì ${employees.length}, ê³í ${plans.length}, êµ¬ì­ ${areas.length}, ìì¼ë³ ${daily.length}ê±´. ìë¡ë ì¤...`;
+    status.textContent = `파싱 완료: 직원 ${employees.length}, 계획 ${plans.length}, 구역 ${areas.length}, 요일별 ${daily.length}건. 업로드 중...`;
 
-    // 5) Supabaseì ìë¡ë (ê¸°ì¡´ ë°ì´í° ì­ì  í ì½ì)
-    // ì­ì 
+    // 5) Supabase에 업로드 (기존 데이터 삭제 후 삽입)
+    // 삭제
     await sb.from('monthly_plans').delete().neq('id', 0);
     await sb.from('monthly_areas').delete().neq('id', 0);
     await sb.from('daily_schedule').delete().neq('id', 0);
     await sb.from('employees').delete().neq('id', 0);
 
-    // ì½ì (50ê°ì© ë°°ì¹)
+    // 삽입 (50개씩 배치)
     if(employees.length) {
       for(let i=0; i<employees.length; i+=50) {
         await sb.from('employees').insert(employees.slice(i, i+50));
@@ -1434,18 +1434,18 @@ async function handleExcelFile(input) {
       }
     }
 
-    // settings ìë°ì´í¸
+    // settings 업데이트
     await sb.from('settings').delete().eq('key', 'last_import');
     await sb.from('settings').insert({key:'last_import', value: new Date().toLocaleString('ko-KR')});
 
-    status.innerHTML = `<span style="color:var(--accent);font-weight:600">â ìë¡ë ìë£!</span><br>ì§ì ${employees.length}ëª, ê³í ${plans.length}ê±´, êµ¬ì­ ${areas.length}ê±´, ìì¼ë³ ${daily.length}ê±´`;
+    status.innerHTML = `<span style="color:var(--accent);font-weight:600">✅ 업로드 완료!</span><br>직원 ${employees.length}명, 계획 ${plans.length}건, 구역 ${areas.length}건, 요일별 ${daily.length}건`;
     
-    // ë°ì´í° ìë¡ê³ ì¹¨
+    // 데이터 새로고침
     await loadAllData();
     input.value = '';
     
   } catch(err) {
-    status.innerHTML = `<span style="color:var(--red)">â ì¤ë¥: ${err.message}</span>`;
+    status.innerHTML = `<span style="color:var(--red)">❌ 오류: ${err.message}</span>`;
     console.error(err);
   }
 }
