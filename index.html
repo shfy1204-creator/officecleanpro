@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dihst/xlsx.full.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 <style>
 :root {
   --bg: #0f1117;
@@ -609,12 +609,11 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 //  ì ì­ ìí
 // ==========================================
 let DATA = { employees:[], plans:{}, areas:{}, daily:[], settings:{}, months:[] };
+            isAdminUser = false;
+            isAdminUser = true;
 let currentTab = 'dashboard';
 let currentMonth = '';
 let loggedInUser = '';
-    let currentUser = null;
-    let isAdminUser = true;
-    let isAdminUser = true;
 
 // ==========================================
 //  ì í¸ë¦¬í°
@@ -633,51 +632,37 @@ const dayEmoji = d => ({
 //  ë¡ê·¸ì¸
 // ==========================================
 async function doLogin() {
-      const idInput = document.getElementById('loginId');
-      const pwInput = document.getElementById('loginPw');
-      const errorEl = document.getElementById('loginError');
-      const id = idInput.value.trim();
-      const pw = pwInput.value.trim();
-      if (!id || !pw) {
-        errorEl.textContent = 'ìì´ëì ë¹ë°ë²í¸ë¥¼ ìë ¥íì¸ì';
-        errorEl.style.display = 'block';
-        return;
-      }
-      errorEl.style.display = 'none';
-      try {
-        const { data: settings } = await sb.from('settings').select('*');
-        if (settings && settings.length > 0) {
-          const adminIdRow = settings.find(r => r.key === 'admin_id');
-          const adminPwRow = settings.find(r => r.key === 'admin_pw');
-          if (adminIdRow && adminPwRow && id === adminIdRow.value && pw === adminPwRow.value) {
-            loggedIn = true;
-            currentUser = { role: 'admin', name: 'ê´ë¦¬ì', login_id: id };
-            isAdminUser = true;
-            isAdminUser = true;
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('app').style.display = 'block';
-            loadAllData();
-            return;
-          }
-        }
-        const { data: empData } = await sb.from('employees').select('*').eq('login_id', id).eq('password', pw);
-        if (empData && empData.length > 0) {
-          loggedIn = true;
-          currentUser = { role: 'employee', name: empData[0].name, login_id: id };
-            isAdminUser = false;
-            isAdminUser = false;
-          document.getElementById('loginScreen').style.display = 'none';
-          document.getElementById('app').style.display = 'block';
-          loadAllData();
-          return;
-        }
-        errorEl.textContent = 'ìì´ë ëë ë¹ë°ë²í¸ê° ì¼ì¹íì§ ììµëë¤';
-        errorEl.style.display = 'block';
-      } catch (err) {
-        errorEl.textContent = 'ë¡ê·¸ì¸ ì¤ ì¤ë¥ê° ë°ìíìµëë¤';
-        errorEl.style.display = 'block';
-      }
-    }
+  const id = document.getElementById('loginId').value.trim();
+  const pw = document.getElementById('loginPw').value.trim();
+  const errEl = document.getElementById('loginError');
+  
+  if(!id || !pw) { errEl.textContent = 'ìì´ëì ë¹ë°ë²í¸ë¥¼ ìë ¥íì¸ì'; return; }
+  
+  // settings íì´ë¸ìì admin ì ë³´ íì¸
+  const { data: settings } = await sb.from('settings').select('*');
+  const sMap = {};
+  (settings||[]).forEach(r => sMap[r.key] = r.value);
+  
+  // ê´ë¦¬ì ê³ì  íì¸
+  const isAdmin = (id === sMap.admin_id && pw === sMap.admin_pw) || (id === sMap.admin_id2 && pw === sMap.admin_pw2);
+  
+  // ì§ì ê³ì  íì¸
+  let isUser = false;
+  try {
+    const accounts = JSON.parse(sMap.user_accounts || '{}');
+    if(accounts[id] && accounts[id] === pw) isUser = true;
+  } catch(e) {}
+  
+  if(isAdmin || isUser) {
+    errEl.textContent = '';
+    loggedInUser = id;
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    await loadAllData();
+  } else {
+    errEl.textContent = 'ìì´ë ëë ë¹ë°ë²í¸ê° ì¼ì¹íì§ ììµëë¤';
+  }
+}
 
 // Enter í¤ë¡ ë¡ê·¸ì¸
 document.addEventListener('keydown', e => {
@@ -777,7 +762,7 @@ function navigateTo(tab) {
 // ==========================================
 function renderDashboard(el) {
   let plans = DATA.plans[currentMonth] || [];
-      if(_empName) plans = filterByEmployee(plans, _empName);
+      if(!isAdminUser && currentUser) plans = filterByEmployee(plans, currentUser.name);
   const areas = DATA.areas[currentMonth] || [];
   const totalPay = plans.reduce((s,r) => s + (r.real_amount||0), 0);
   const totalReal = plans.reduce((s,r) => s + (r.real_amount||0), 0);
@@ -880,7 +865,7 @@ function filterClients(q) {
 // ==========================================
 function renderWorkers(el) {
   let plans = DATA.plans[currentMonth] || [];
-      if(_empName) plans = filterByEmployee(plans, _empName);
+      if(!isAdminUser && currentUser) plans = filterByEmployee(plans, currentUser.name);
   
   // ë´ë¹ìë³ ê·¸ë£¹í
   const groups = {};
@@ -922,7 +907,7 @@ function renderWorkers(el) {
 function renderWeekday(el) {
   const days = ['ììì¼','íìì¼','ììì¼','ëª©ìì¼','ê¸ìì¼','í ìì¼','ì¼ìì¼'];
   const groups = {};
-  ((_empName) ? filterByEmployee(DATA.daily, _empName) : DATA.daily).forEach(r => {
+  ((!isAdminUser && currentUser) ? filterByEmployee(DATA.daily, currentUser.name) : DATA.daily).forEach(r => {
     const d = r.day || 'ê¸°í';
     if(!groups[d]) groups[d] = [];
     groups[d].push(r);
@@ -1449,17 +1434,11 @@ async function handleExcelFile(input) {
     
   } catch(err) {
     status.innerHTML = `<span style="color:var(--red)">â ì¤ë¥: ${err.message}</span>`;
-    console.error(err);av
+    console.error(err);
   }
 }
 
 
-    function filterByEmployee(data, empName) {
-      if (!empName || isAdminUser) return data;
-      return data.filter(d => d.worker && d.worker.includes(empName));
-    }
-
-    
     function filterByEmployee(data, empName) {
       if (!empName || isAdminUser) return data;
       return data.filter(d => d.worker && d.worker.includes(empName));
